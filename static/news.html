@@ -1,1 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Новости — Alma Digital</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
 
+<div id="page-progress" style="width:0%"></div>
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <div class="logo-mark">AD</div>
+        <span class="logo-text">Alma<span>Digital</span></span>
+      </a>
+      <nav class="nav">
+        <a href="/">Главная</a>
+        <a href="/#plans">Тарифы</a>
+        <a href="/news" class="active">Новости</a>
+        <a href="/#order">Подключиться</a>
+      </nav>
+      <button class="header-cta" onclick="window.location.href='/#order'">Оставить заявку</button>
+    </div>
+  </div>
+</header>
+
+
+<!-- ГЕРОЙ СТРАНИЦЫ НОВОСТЕЙ -->
+<section class="section-sm" style="padding-top: 56px;">
+  <div class="container">
+    <div class="tag">Медиацентр</div>
+    <h1 class="section-title">Новости и анонсы</h1>
+    <p class="section-subtitle">Актуальные события, обновления продуктов и акции от Alma Digital.</p>
+
+    <!-- Фильтры категорий -->
+    <div class="news-filters" id="newsFilters">
+      <button class="filter-btn active" data-cat="" onclick="filterNews(this, '')">Все</button>
+      <!-- Кнопки категорий загружаются динамически через JS -->
+    </div>
+
+    <!-- Сетка новостей -->
+    <div class="news-grid" id="newsGrid">
+      <!-- Скелетоны загрузки -->
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    </div>
+
+    <!-- Сообщение об отсутствии новостей -->
+    <div id="newsEmpty" style="display:none; text-align:center; padding: 60px 0; color: var(--text-muted); font-size: 0.95rem;">
+      По данной категории новостей пока нет.
+    </div>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+      <span class="footer-copy">© 2025 Alma Digital. Дипломный проект.</span>
+      <a href="/" style="font-size: 0.8rem; color: var(--text-muted);">← На главную</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
