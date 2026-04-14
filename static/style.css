@@ -1,11 +1,10 @@
-
 /* =============================================================================
    style.css — Стили веб-приложения Alma Digital
    Дизайн вдохновлён Alma+: тёмная тема, крупная типографика, premium-чувство
    ============================================================================= */
 
 /* ─── Google Fonts ─────────────────────────────────────────────────────────── */
-
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;900&family=Unbounded:wght@400;600;700;900&display=swap');
 
 /* ─── CSS-переменные (дизайн-токены) ────────────────────────────────────────── */
 :root {
@@ -31,8 +30,8 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
 
-  --font-display: 'Segoe UI', sans-serif;
---font-body:    'Segoe UI', sans-serif;
+  --font-display: 'Unbounded', sans-serif;
+  --font-body:    'Golos Text', sans-serif;
 
   --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   --shadow-card: 0 4px 32px rgba(0,0,0,0.45);
@@ -1155,4 +1154,244 @@ select.form-control option {
   z-index: 9999;
   transition: width 0.2s ease;
   box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* =============================================================================
+   МОБИЛЬНЫЙ АДАПТИВ — полная адаптация под смартфоны
+   Добавлено: бургер-меню, мобильная навигация, адаптивные блоки
+   ============================================================================= */
+
+/* ─── БУРГЕР-КНОПКА ─────────────────────────────────────────────────────────── */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+.burger span {
+  display: block;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+/* Анимация бургера → крестик */
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ─── МОБИЛЬНОЕ МЕНЮ (выпадающее) ───────────────────────────────────────────── */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 68px;
+  left: 0;
+  right: 0;
+  background: rgba(13,13,20,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 99;
+  padding: 16px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-nav.open { display: flex; }
+
+.mobile-nav a {
+  display: block;
+  padding: 13px 16px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  border: 1px solid transparent;
+}
+
+.mobile-nav a:hover,
+.mobile-nav a.active {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.mobile-nav .mobile-cta {
+  margin-top: 8px;
+  background: var(--accent);
+  color: #fff;
+  text-align: center;
+  border-radius: 100px;
+  font-weight: 600;
+  border-color: transparent;
+}
+.mobile-nav .mobile-cta:hover { background: #ff4038; }
+
+/* ─── АДАПТИВ 768px ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* Шапка */
+  .nav { display: none; }
+  .header-cta { display: none; }
+  .burger { display: flex; }
+
+  /* Hero */
+  .hero { padding: 60px 0 40px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+  .hero-visual { display: none; }
+  .hero h1 { font-size: 2rem; }
+  .hero-desc { font-size: 0.95rem; }
+  .hero-actions { flex-direction: column; }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary { width: 100%; justify-content: center; }
+
+  /* Статистика */
+  .stats-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .stats-row .stat-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  /* Секции */
+  .section { padding: 48px 0; }
+  .section-title { font-size: 1.5rem; }
+  .section-subtitle { font-size: 0.9rem; }
+  .container { padding: 0 16px; }
+
+  /* Тарифы */
+  .plans-grid { grid-template-columns: 1fr; gap: 16px; }
+  .plan-card { padding: 24px 20px; }
+
+  /* Форма заявки */
+  .order-inner { grid-template-columns: 1fr; gap: 28px; }
+  .order-form { padding: 24px 20px; }
+  .order-info h2 .section-title { font-size: 1.4rem; }
+
+  /* Новости */
+  .news-grid { grid-template-columns: 1fr; gap: 16px; }
+  .news-filters { gap: 6px; }
+  .filter-btn { font-size: 0.8rem; padding: 7px 14px; }
+
+  /* Игровой триггер */
+  .game-trigger-bar { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .game-trigger-arrow { display: none; }
+
+  /* Модалка тетриса */
+  .modal-box { padding: 20px 16px; }
+  .modal-title { font-size: 1rem; }
+  .tetris-layout { flex-direction: column; align-items: center; gap: 16px; }
+  .tetris-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10px;
+  }
+  .t-panel { flex: 1; min-width: 70px; padding: 10px 12px; }
+  .t-panel-val { font-size: 1.1rem; }
+  #nextCanvas { width: 80px !important; height: 80px !important; }
+
+  /* Футер */
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Личный кабинет */
+  .cabinet-layout {
+    grid-template-columns: 1fr;
+    padding: 20px 0 60px;
+    gap: 16px;
+  }
+
+  .cabinet-nav {
+    position: static;
+    border-radius: var(--radius-lg);
+  }
+
+  .cabinet-user { padding: 16px; }
+  .cabinet-avatar { width: 40px; height: 40px; font-size: 0.9rem; }
+
+  /* Горизонтальное меню кабинета на мобиле */
+  .cabinet-menu {
+    display: flex;
+    padding: 8px;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cabinet-menu li { flex-shrink: 0; }
+
+  .cabinet-menu li a {
+    padding: 9px 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .logout-btn {
+    padding: 10px 16px;
+    font-size: 0.82rem;
+  }
+
+  .panel-card { padding: 20px 16px; }
+
+  .tariff-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .tariff-option { padding: 16px; }
+
+  .current-tariff-box {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  /* Скрываем колонку даты на маленьких экранах */
+  .orders-table th:nth-child(3),
+  .orders-table td:nth-child(3) {
+    display: none;
+  }
+
+  /* Авторизация */
+  .auth-wrapper { margin: 32px auto; }
+}
+
+/* ─── АДАПТИВ 480px (маленькие телефоны) ────────────────────────────────────── */
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.7rem; }
+  .plan-speed { font-size: 1.8rem; }
+  .stat-num { font-size: 1.6rem; }
+  .section-title { font-size: 1.35rem; }
+
+  .stats-row { grid-template-columns: 1fr; }
+  .stats-row .stat-item:last-child { grid-column: auto; }
+
+  .tag { font-size: 0.6rem; }
+
+  .form-control { font-size: 16px; } /* Предотвращает zoom на iOS при фокусе */
 }
