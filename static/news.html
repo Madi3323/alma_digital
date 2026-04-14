@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-
+ 
 <div id="page-progress" style="width:0%"></div>
-
+ 
 <!-- ШАПКА -->
 <header class="header">
   <div class="container">
@@ -25,24 +25,34 @@
         <a href="/#order">Подключиться</a>
       </nav>
       <button class="header-cta" onclick="window.location.href='/#order'">Оставить заявку</button>
+      <button class="burger" id="burger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 </header>
-
-
+<nav class="mobile-nav" id="mobileNav">
+  <a href="/">Главная</a>
+  <a href="/#plans">Тарифы</a>
+  <a href="/news" class="active">Новости</a>
+  <a href="/cabinet">Кабинет</a>
+  <a href="/#order" class="mobile-cta">Оставить заявку</a>
+</nav>
+ 
+ 
 <!-- ГЕРОЙ СТРАНИЦЫ НОВОСТЕЙ -->
 <section class="section-sm" style="padding-top: 56px;">
   <div class="container">
     <div class="tag">Медиацентр</div>
     <h1 class="section-title">Новости и анонсы</h1>
     <p class="section-subtitle">Актуальные события, обновления продуктов и акции от Alma Digital.</p>
-
+ 
     <!-- Фильтры категорий -->
     <div class="news-filters" id="newsFilters">
       <button class="filter-btn active" data-cat="" onclick="filterNews(this, '')">Все</button>
       <!-- Кнопки категорий загружаются динамически через JS -->
     </div>
-
+ 
     <!-- Сетка новостей -->
     <div class="news-grid" id="newsGrid">
       <!-- Скелетоны загрузки -->
@@ -50,15 +60,15 @@
       <div class="skeleton skeleton-card"></div>
       <div class="skeleton skeleton-card"></div>
     </div>
-
+ 
     <!-- Сообщение об отсутствии новостей -->
     <div id="newsEmpty" style="display:none; text-align:center; padding: 60px 0; color: var(--text-muted); font-size: 0.95rem;">
       По данной категории новостей пока нет.
     </div>
   </div>
 </section>
-
-
+ 
+ 
 <footer class="footer">
   <div class="container">
     <div class="footer-bottom" style="border-top: none; padding-top: 0;">
@@ -67,8 +77,8 @@
     </div>
   </div>
 </footer>
-
+ 
 <script src="/static/script.js"></script>
-
+ 
 </body>
 </html>
