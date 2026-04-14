@@ -355,3 +355,33 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNews(null);  // GET /api/news — все новости
   }
 });
+
+// ─────────────────────────────────────────────
+// БУРГЕР-МЕНЮ (мобильная навигация)
+// ─────────────────────────────────────────────
+
+/**
+ * Открывает/закрывает мобильное меню
+ */
+function toggleMenu() {
+  const burger = document.getElementById('burger');
+  const nav    = document.getElementById('mobileNav');
+  if (!burger || !nav) return;
+  burger.classList.toggle('open');
+  nav.classList.toggle('open');
+  // Блокируем прокрутку фона когда меню открыто
+  document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+}
+
+// Закрываем меню при клике на ссылку
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.mobile-nav a').forEach(link => {
+    link.addEventListener('click', () => {
+      const burger = document.getElementById('burger');
+      const nav    = document.getElementById('mobileNav');
+      if (burger) burger.classList.remove('open');
+      if (nav) nav.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+});
