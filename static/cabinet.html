@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Личный кабинет — Alma Digital</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .cabinet-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      align-items: start;
+      padding: 40px 0 80px;
+    }
+
+    /* Боковое меню */
+    .cabinet-nav {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      position: sticky;
+      top: 88px;
+    }
+
+    .cabinet-user {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cabinet-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .cabinet-user-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .cabinet-user-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .cabinet-menu {
+      list-style: none;
+      padding: 8px;
+    }
+
+    .cabinet-menu li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all var(--transition);
+    }
+
+    .cabinet-menu li a:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+    }
+
+    .cabinet-menu li a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .menu-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 22px;
+      background: none;
+      border: none;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color var(--transition);
+      margin-top: 4px;
+    }
+    .logout-btn:hover { color: var(--accent); }
+
+    /* Панели контента */
+    .cabinet-panel {
+      display: none;
+    }
+    .cabinet-panel.active {
+      display: block;
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 20px;
+    }
+
+    .panel-card h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Таблица заявок */
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .orders-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .orders-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .orders-table tr:last-child td { border-bottom: none; }
+    .orders-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .status-new {
+      background: rgba(240,165,0,0.15);
+      color: var(--gold);
+    }
+    .status-done {
+      background: rgba(74,222,128,0.12);
+      color: #4ade80;
+    }
+    .status-cancel {
+      background: rgba(232,49,42,0.12);
+      color: var(--accent);
+    }
+
+    /* Тарифные карточки в кабинете */
+    .tariff-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .tariff-option {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      background: var(--bg-surface);
+    }
+
+    .tariff-option:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .tariff-option.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .tariff-option-speed {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .tariff-option-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 6px 0 4px;
+    }
+
+    .tariff-option-price {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Текущий тариф */
+    .current-tariff-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .current-tariff-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .current-tariff-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Экраны авторизации */
+    .auth-wrapper {
+      max-width: 440px;
+      margin: 60px auto;
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .auth-tab.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+
+    @media (max-width: 768px) {
+      .cabinet-layout { grid-template-columns: 1fr; }
+      .cabinet-nav { position: static; }
+      .tariff-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="page-progress" style="width:0%"></div>
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <div class="logo-mark">AD</div>
+        <span class="logo-text">Alma<span>Digital</span></span>
+      </a>
+      <nav class="nav">
+        <a href="/">Главная</a>
+        <a href="/#plans">Тарифы</a>
+        <a href="/news">Новости</a>
+        <a href="/cabinet" class="active">Кабинет</a>
+      </nav>
+      <button class="header-cta" onclick="window.location.href='/#order'">Оставить заявку</button>
+      <button class="burger" id="burger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobileNav">
+  <a href="/">Главная</a>
+  <a href="/#plans">Тарифы</a>
+  <a href="/news">Новости</a>
+  <a href="/cabinet" class="active">Кабинет</a>
+  <a href="/#order" class="mobile-cta">Оставить заявку</a>
+</nav>
+
+
+<div class="container">
+
+  <!-- ══ ЭКРАН АВТОРИЗАЦИИ (показывается если не вошёл) ══ -->
+  <div id="authScreen" class="auth-wrapper" style="display:none;">
+    <div class="tag" style="margin-bottom:16px">Личный кабинет</div>
+    <h1 class="section-title" style="margin-bottom:8px">Войти или зарегистрироваться</h1>
+    <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:28px">
+      Управляйте тарифом и просматривайте свои заявки
+    </p>
+
+    <!-- Табы -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Войти</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Зарегистрироваться</button>
+    </div>
+
+    <!-- Форма входа -->
+    <div class="auth-form active" id="loginForm">
+      <div class="panel-card" style="margin-bottom:0">
+        <div class="form-group">
+          <label>Номер телефона</label>
+          <input type="tel" id="loginPhone" class="form-control" placeholder="+7 (___) ___-__-__" />
+        </div>
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="Введите пароль" />
+        </div>
+        <button class="form-submit" onclick="doLogin()">Войти</button>
+        <div class="form-alert" id="loginAlert"></div>
+      </div>
+    </div>
+
+    <!-- Форма регистрации -->
+    <div class="auth-form" id="registerForm">
+      <div class="panel-card" style="margin-bottom:0">
+        <div class="form-group">
+          <label>Ваше имя *</label>
+          <input type="text" id="regName" class="form-control" placeholder="Иван Иванов" />
+        </div>
+        <div class="form-group">
+          <label>Номер телефона *</label>
+          <input type="tel" id="regPhone" class="form-control" placeholder="+7 (___) ___-__-__" />
+        </div>
+        <div class="form-group">
+          <label>Email (необязательно)</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="example@mail.com" />
+        </div>
+        <div class="form-group">
+          <label>Пароль * (минимум 6 символов)</label>
+          <input type="password" id="regPassword" class="form-control" placeholder="Придумайте пароль" />
+        </div>
+        <button class="form-submit" onclick="doRegister()">Зарегистрироваться</button>
+        <div class="form-alert" id="registerAlert"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ ЛИЧНЫЙ КАБИНЕТ (показывается после входа) ══ -->
+  <div id="cabinetScreen" class="cabinet-layout" style="display:none;">
+
+    <!-- Боковое меню -->
+    <aside class="cabinet-nav">
+      <div class="cabinet-user">
+        <div class="cabinet-avatar" id="avatarInitials">?</div>
+        <div>
+          <div class="cabinet-user-name" id="sidebarName">Загрузка...</div>
+          <div class="cabinet-user-sub">Личный кабинет</div>
+        </div>
+      </div>
+
+      <ul class="cabinet-menu">
+        <li><a href="#" class="active" onclick="showPanel('profile', this)">
+          <span class="menu-icon">👤</span> Личные данные
+        </a></li>
+        <li><a href="#" onclick="showPanel('tariff', this)">
+          <span class="menu-icon">📡</span> Мой тариф
+        </a></li>
+        <li><a href="#" onclick="showPanel('orders', this)">
+          <span class="menu-icon">📋</span> Мои заявки
+        </a></li>
+      </ul>
+
+      <button class="logout-btn" onclick="doLogout()">
+        <span>🚪</span> Выйти
+      </button>
+    </aside>
+
+    <!-- Основной контент -->
+    <main>
+
+      <!-- Панель: Личные данные -->
+      <div class="cabinet-panel active" id="panel-profile">
+        <div class="panel-card">
+          <h3>Личные данные</h3>
+          <div class="form-group">
+            <label>Имя</label>
+            <input type="text" id="profileName" class="form-control" placeholder="Ваше имя" />
+          </div>
+          <div class="form-group">
+            <label>Телефон</label>
+            <input type="tel" id="profilePhone" class="form-control" disabled
+              style="opacity:0.5;cursor:not-allowed" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="profileEmail" class="form-control" placeholder="Ваш email" />
+          </div>
+          <div class="form-group">
+            <label>Дата регистрации</label>
+            <input type="text" id="profileCreated" class="form-control" disabled
+              style="opacity:0.5;cursor:not-allowed" />
+          </div>
+          <button class="form-submit" style="max-width:200px" onclick="saveProfile()">
+            Сохранить
+          </button>
+          <div class="form-alert" id="profileAlert"></div>
+        </div>
+      </div>
+
+      <!-- Панель: Мой тариф -->
+      <div class="cabinet-panel" id="panel-tariff">
+        <div class="panel-card">
+          <h3>Мой тариф</h3>
+
+          <div class="current-tariff-box">
+            <div>
+              <div class="current-tariff-label">Текущий тариф</div>
+              <div class="current-tariff-name" id="currentTariffName">Не выбран</div>
+            </div>
+            <div style="font-size:2rem">📡</div>
+          </div>
+
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:20px">
+            Выберите новый тариф — мы свяжемся с вами для оформления перехода:
+          </p>
+
+          <div class="tariff-grid">
+            <div class="tariff-option" onclick="selectTariff(this, 'Стандарт 100 Мбит/с')">
+              <div class="tariff-option-speed">100</div>
+              <div class="tariff-option-name">Стандарт</div>
+              <div class="tariff-option-price">3 990 ₸/мес</div>
+            </div>
+            <div class="tariff-option" onclick="selectTariff(this, 'Оптима 300 Мбит/с')">
+              <div class="tariff-option-speed">300</div>
+              <div class="tariff-option-name">Оптима</div>
+              <div class="tariff-option-price">6 990 ₸/мес</div>
+            </div>
+            <div class="tariff-option" onclick="selectTariff(this, 'Гига 1000 Мбит/с')">
+              <div class="tariff-option-speed">1000</div>
+              <div class="tariff-option-name">Гига</div>
+              <div class="tariff-option-price">11 990 ₸/мес</div>
+            </div>
+          </div>
+
+          <button class="form-submit" style="max-width:220px;margin-top:24px" onclick="saveTariff()">
+            Сменить тариф
+          </button>
+          <div class="form-alert" id="tariffAlert"></div>
+        </div>
+      </div>
+
+      <!-- Панель: Мои заявки -->
+      <div class="cabinet-panel" id="panel-orders">
+        <div class="panel-card">
+          <h3>Мои заявки</h3>
+          <div id="ordersContent">
+            <div class="skeleton" style="height:200px;border-radius:var(--radius-md)"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</div><!-- /container -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span class="footer-copy">© 2025 Alma Digital. Дипломный проект.</span>
+      <a href="/" style="font-size:0.8rem;color:var(--text-muted)">← На главную</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/script.js"></script>
+<script>
+// =============================================================================
+// Логика личного кабинета
+// =============================================================================
+
+let selectedTariff = null;  // Выбранный но ещё не сохранённый тариф
+
+// ── Переключение табов авторизации ──────────────────────────────────────────
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+  document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+  document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+}
+
+// ── Переключение панелей кабинета ────────────────────────────────────────────
+
+function showPanel(name, link) {
+  document.querySelectorAll('.cabinet-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.cabinet-menu a').forEach(a => a.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (link) link.classList.add('active');
+
+  // Загружаем заявки при переходе на эту панель
+  if (name === 'orders') loadMyOrders();
+  return false;
+}
+
+// ── Показ/скрытие экранов ────────────────────────────────────────────────────
+
+function showAuth() {
+  document.getElementById('authScreen').style.display = 'block';
+  document.getElementById('cabinetScreen').style.display = 'none';
+}
+
+function showCabinet(user) {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('cabinetScreen').style.display = 'grid';
+
+  // Заполняем данные
+  const initials = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  document.getElementById('avatarInitials').textContent = initials;
+  document.getElementById('sidebarName').textContent = user.name;
+  document.getElementById('profileName').value = user.name || '';
+  document.getElementById('profilePhone').value = user.phone || '';
+  document.getElementById('profileEmail').value = user.email || '';
+  document.getElementById('profileCreated').value = user.created || '';
+  document.getElementById('currentTariffName').textContent = user.tariff || 'Не выбран';
+
+  // Подсвечиваем текущий тариф
+  document.querySelectorAll('.tariff-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.tariff === user.tariff);
+  });
+}
+
+// ── Проверка сессии при загрузке ─────────────────────────────────────────────
+
+async function checkSession() {
+  try {
+    const res  = await fetch('/api/me');
+    const data = await res.json();
+    if (data.success) {
+      showCabinet(data.data);
+    } else {
+      showAuth();
+    }
+  } catch {
+    showAuth();
+  }
+}
+
+// ── Вход ─────────────────────────────────────────────────────────────────────
+
+async function doLogin() {
+  const phone    = document.getElementById('loginPhone').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const alert    = document.getElementById('loginAlert');
+
+  alert.className = 'form-alert';
+
+  try {
+    const res  = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, password })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      await checkSession();
+    } else {
+      alert.textContent = data.message;
+      alert.className = 'form-alert error';
+    }
+  } catch {
+    alert.textContent = 'Ошибка соединения';
+    alert.className = 'form-alert error';
+  }
+}
+
+// ── Регистрация ───────────────────────────────────────────────────────────────
+
+async function doRegister() {
+  const name     = document.getElementById('regName').value.trim();
+  const phone    = document.getElementById('regPhone').value.trim();
+  const email    = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value.trim();
+  const alert    = document.getElementById('registerAlert');
+
+  alert.className = 'form-alert';
+
+  try {
+    const res  = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, email, password })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      await checkSession();
+    } else {
+      alert.textContent = data.message;
+      alert.className = 'form-alert error';
+    }
+  } catch {
+    alert.textContent = 'Ошибка соединения';
+    alert.className = 'form-alert error';
+  }
+}
+
+// ── Выход ─────────────────────────────────────────────────────────────────────
+
+async function doLogout() {
+  await fetch('/api/logout', { method: 'POST' });
+  showAuth();
+}
+
+// ── Сохранить личные данные ───────────────────────────────────────────────────
+
+async function saveProfile() {
+  const name  = document.getElementById('profileName').value.trim();
+  const email = document.getElementById('profileEmail').value.trim();
+  const alert = document.getElementById('profileAlert');
+
+  try {
+    const res  = await fetch('/api/me', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email })
+    });
+    const data = await res.json();
+    alert.textContent = data.message;
+    alert.className = 'form-alert ' + (data.success ? 'success' : 'error');
+
+    if (data.success) {
+      document.getElementById('sidebarName').textContent = name;
+      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('avatarInitials').textContent = initials;
+    }
+  } catch {
+    alert.textContent = 'Ошибка соединения';
+    alert.className = 'form-alert error';
+  }
+}
+
+// ── Выбор тарифа ─────────────────────────────────────────────────────────────
+
+function selectTariff(el, tariffName) {
+  document.querySelectorAll('.tariff-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTariff = tariffName;
+}
+
+async function saveTariff() {
+  const alert = document.getElementById('tariffAlert');
+  if (!selectedTariff) {
+    alert.textContent = 'Выберите тариф';
+    alert.className = 'form-alert error';
+    return;
+  }
+
+  try {
+    const res  = await fetch('/api/me/tariff', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tariff: selectedTariff })
+    });
+    const data = await res.json();
+    alert.textContent = data.message;
+    alert.className = 'form-alert ' + (data.success ? 'success' : 'error');
+
+    if (data.success) {
+      document.getElementById('currentTariffName').textContent = selectedTariff;
+    }
+  } catch {
+    alert.textContent = 'Ошибка соединения';
+    alert.className = 'form-alert error';
+  }
+}
+
+// ── Загрузить мои заявки ──────────────────────────────────────────────────────
+
+async function loadMyOrders() {
+  const container = document.getElementById('ordersContent');
+  container.innerHTML = '<div class="skeleton" style="height:200px;border-radius:var(--radius-md)"></div>';
+
+  try {
+    const res  = await fetch('/api/me/orders');
+    const data = await res.json();
+
+    if (!data.success) {
+      container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px">Ошибка загрузки</p>';
+      return;
+    }
+
+    if (data.data.length === 0) {
+      container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px">У вас пока нет заявок.<br>Вы можете оставить заявку на <a href="/#order" style="color:var(--accent)">главной странице</a>.</p>';
+      return;
+    }
+
+    const statusMap = {
+      'новая':     ['status-new', 'Новая'],
+      'в работе':  ['status-new', 'В работе'],
+      'выполнена': ['status-done', 'Выполнена'],
+      'отменена':  ['status-cancel', 'Отменена'],
+    };
+
+    const rows = data.data.map(o => {
+      const [cls, label] = statusMap[o.status] || ['status-new', o.status];
+      return `
+        <tr>
+          <td>#${o.id}</td>
+          <td style="color:var(--text-primary)">${o.service}</td>
+          <td>${o.created}</td>
+          <td><span class="status-badge ${cls}">${label}</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Тариф</th>
+            <th>Дата</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  } catch {
+    container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px">Ошибка соединения</p>';
+  }
+}
+
+// ── Инициализация ─────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', checkSession);
+</script>
+
+</body>
+</html>
